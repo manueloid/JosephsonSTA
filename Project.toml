@@ -3,6 +3,9 @@ uuid = "0f57ff0d-e87d-46e3-b1bb-275a51971cfa"
 authors = ["manuel <manuel.odelli@gmail.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+
 [compat]
 julia = "1"
 
