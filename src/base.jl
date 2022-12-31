@@ -9,16 +9,13 @@ struct ControlParameter
 end
 
 """
-offset(cp::ControlParameter, offset::Float64) given an initial `ControlParameter` variable, shift the initial and final ω by a factor `offset`
-"""
-function offset(cp::ControlParameter, offset::Float64)
-    offset_cp = ControlParameter(cp.ω0 + offset, cp.ωf + offset, cp.final_time, cp.NParticles)
-    return offset_cp
-end
-
-"""
 standard_cp() utility to return a standard control paramter to play around
 """
 function standard_cp()
     return ControlParameter(2.0, 14.2, 0.3, 50)
 end
+
+# One liners to create new ControlParameter variables from existing ones
+cp_time(cp::ControlParameter, time::Float64) = ControlParameter(cp.ω0, cp.ωf, time, cp.NParticles)
+cp_particles(cp::ControlParameter, particles::Int64) = ControlParameter(cp.ω0, cp.ωf, cp.final_time, particles)
+offset(cp::ControlParameter, offset::Float64) = ControlParameter(cp.ω0 + offset, cp.ωf + offset, cp.final_time, cp.NParticles)

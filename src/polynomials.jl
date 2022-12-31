@@ -41,4 +41,14 @@ control_ω(t::Float64, cp::ControlParameter) return the control `ω` given the c
 function control_ω(t::Float64, cp::ControlParameter)
     -polynomial_2d(t, cp) / polynomial(t, cp) + cp.ω0^2 / polynomial(t, cp)^4
 end
+
+"""
+correction_poly(cp::ControlParameter, correction_vector::Array{Float64,1}) takes the correction values and returns a lagrange polynomial that will then be added to the initial control parameter 
+"""
+function correction_poly(t::Float64, cp::ControlParameter, correction_vector::Array{Float64,1})
+    ys = [0.0; correction_vector; 0.0] # faster than vcat([]...)
+    xs = range(0.0, cp.final_time, length=length(ys)) |> collect
+    return Lagrange(xs, ys)(t)
+end
+
 ##}}}

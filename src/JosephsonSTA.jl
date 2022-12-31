@@ -4,6 +4,9 @@ using QuadGK
 using SpecialPolynomials
 using QuadGK
 using HCubature
+using QuantumOptics
+using DataFrames
+using CSV
 
 ##{{{ Including the basic functionalities 
 export ControlParameter
@@ -14,6 +17,7 @@ include("base.jl")
 
 ##{{{ Including polynomials and wavefunction utilities
 export control_ω
+export correction_poly
 include("polynomials.jl")
 ##}}}
 
@@ -29,6 +33,12 @@ include("wavefunctions.jl")
 
 export corrections
 include("corrections_full.jl")
+
+##{{{ Including utilities to calculate the fidelity of the protocol
+export fidelity_single
+export fidelity_multiple
+include("simulation.jl")
+##}}}
 
 end
 

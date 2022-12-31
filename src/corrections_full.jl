@@ -20,7 +20,7 @@ end
 """
 This function returns the Kns given the fuction ⟨2|z²|0⟩:= z_square_int
 """
-function Kns(nlambda::Int64, cp::ControlParameter)
+function Kns(cp::ControlParameter, nlambda::Int64=5)
     return 0.25 * quadgk(t -> gradient_λ(nlambda, cp.final_time, t) * z_square_analytic(t, cp), 0.0, cp.final_time)[1]
 end
 ##}}}
@@ -73,15 +73,15 @@ precompile(Gn, (Int64, ControlParameter))
 """
 This function will evaluate the corrections given the maximum numbers of STA wavefunctions we want to use and the number of points we want to interpolate
 """
-function corrections(nlambda::Int64, max_bra::Int64, cp::ControlParameter)
+function corrections(cp::ControlParameter, nlambda::Int64=5, max_bra::Int64=4)
     gns = 0.0
     g2 = Gn(2, cp)
     for mbra = 4:2:max_bra
         gns += Gn(mbra, cp) |> abs2
     end
-    k2 = Kns(nlambda, cp)
+    k2 = Kns(cp, nlambda)
     return (gns + abs2(g2)) * real(conj(g2) * k2) /
            ((real(conj(g2) * k2))' * (real(conj(g2) * k2)))
 end
-precompile(corrections, (Int64, Int64, ControlParameter))
+precompile(corrections, (ControlParameter, Int64, Int64,))
 ##}}} ##src
