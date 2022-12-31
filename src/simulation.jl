@@ -33,7 +33,8 @@ fidelity_multiple(cp::ControlParameter, final_times::Vector{Float64}, nlambda::I
 function fidelity_multiple(cp::ControlParameter, final_times::Vector{Float64}, nlambda::Int64=5, maxbra::Int64=4)
     qt = constant_quantities(cp)
     fidelities = ones(length(final_times))
-    Threads.@threads for (index, tf) in enumerate(final_times) |> collect
+    #Threads.@threads for (index, tf) in enumerate(final_times) |> collect
+    for (index, tf) in enumerate(final_times) |> collect
         local cparam = cp_time(cp, tf)
         corr = corrections(cparam, nlambda, maxbra)
         ω_esta(t) = control_ω(t, cp) - correction_poly(t, cp, corr)
@@ -42,7 +43,7 @@ function fidelity_multiple(cp::ControlParameter, final_times::Vector{Float64}, n
         function H_eSTA(t, psi) # Function to return the time dependent Hamiltonian
             return (2.0 / cp.NParticles * (ω_esta(t) / 4.0 - 1.0) * qt.Jz^2 - 2.0 * qt.Jx)
         end
-        println("Evaluating the fidelity for final time $tf")
+        println("fidelity for final time $tf")
         fidelities[index] = timeevolution.schroedinger_dynamic([0.0, tf], qt.ψ0, H_eSTA; fout=fidelity)[2][end]  # Time evolution where the output is not the resulting state but the fidelity. It helps improving the speed of the calculation
         println("Done")
     end
