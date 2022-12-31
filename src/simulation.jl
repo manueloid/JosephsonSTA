@@ -24,7 +24,7 @@ function fidelity_single(cp::ControlParameter, nlambda::Int64=5, maxbra::Int64=4
     function H_eSTA(t, psi) # Function to return the time dependent Hamiltonian
         return (2.0 / cp.NParticles * (ω_esta(t) / 4.0 - 1.0) * qt.Jz^2 - 2.0 * qt.Jx)
     end
-    return timeevolution.schroedinger_dynamic([0.0, final_time], qt.ψ0, H_eSTA; fout=fidelity)[2][end]  # Time evolution where the output is not the resulting state but the fidelity. It helps improving the speed of the calculation
+    return timeevolution.schroedinger_dynamic([0.0, cp.final_time], qt.ψ0, H_eSTA; fout=fidelity)[2][end]  # Time evolution where the output is not the resulting state but the fidelity. It helps improving the speed of the calculation
 end
 
 """
