@@ -25,7 +25,6 @@ function Kns(nlambda::Int64, cp::ControlParameter)
 end
 ##}}}
 ##{{{Calculation of the Gns ##src
-
 bh(z::Float64, h::Float64) = abs(z) <= 1 ? √((1 + z + h) * (1 - z)) : 0 # One-line function that returns the piecewise function bₕ(z)
 
 """
@@ -42,7 +41,7 @@ function Gn_bh(mth_bra::Int64, cp::ControlParameter)
         rtol=1e-5,
     )[1]
 end
-
+precompile(Gn_bh, (Int64, ControlParameter))
 """
 This function returns the sum of the two following integrals ⟨2|z²|0⟩ and ⟨2|∂²|0⟩ with respect of time
 """
@@ -56,22 +55,33 @@ function Gn_analytic(cp::ControlParameter)
         rtol=1e-5,
     )[1]
 end
-
-Gn(m::Int64, cparam::ControlParameter) = m == 2 ? Gn_bh(m, cparam) + Gn_analytic(cparam) : Gn_bh(m, cparam)
-# finally, as we can check from the notes, we are only interested in the K₂ term as the other ones are all 0. Let us focus only on m = 2
+precompile(Gn_analytic, (ControlParameter,))
+"""
+Gn(m::Int64, cp::ControlParameter) return the value of the singular Gn for a given m.
+For m ≢ 2, we know that the analytic part of the integral is 0 and thus we are only interested in Gn_bh
+"""
+function Gn(m::Int64, cp::ControlParameter)
+    if m == 2
+        result = Gn_bh(m, cp) + Gn_analytic(cp)
+    else
+        result = Gn_bh(m, cp)
+    end
+end
+precompile(Gn, (Int64, ControlParameter))
 ##}}} ##src
 ##{{{Calculation of corrections for the original eSTA##src
 """
 This function will evaluate the corrections given the maximum numbers of STA wavefunctions we want to use and the number of points we want to interpolate
 """
-function corrections(nlambda::Int64, max_bra::Int64, cparam::ControlParameter)
+function corrections(nlambda::Int64, max_bra::Int64, cp::ControlParameter)
     gns = 0.0
-    g2 = Gn(2, cparam)
+    g2 = Gn(2, cp)
     for mbra = 4:2:max_bra
-        gns += Gn(mbra, cparam) |> abs2
+        gns += Gn(mbra, cp) |> abs2
     end
-    k2 = Kns(nlambda, cparam)
+    k2 = Kns(nlambda, cp)
     return (gns + abs2(g2)) * real(conj(g2) * k2) /
            ((real(conj(g2) * k2))' * (real(conj(g2) * k2)))
 end
+precompile(corrections, (Int64, Int64, ControlParameter))
 ##}}} ##src
