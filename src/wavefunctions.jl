@@ -59,3 +59,20 @@ function ground_state_2d(z::Float64, t::Float64, cp::ControlParameter)
     return ground_state(z, t, cp) * (4z^2 * time_dep_Gaussian(t, cp)^2 + 2time_dep_Gaussian(t, cp))
 end
 ##}}}
+
+##{{{ Definition of the analytic integrals with respect to the space variable
+# Now I know I can solve some integrals analytically and here I will define them.
+"""
+z_square_analytic(t::Float64, cp::ControlParameter) return the integral ⟨χ₂|z²|χ₀⟩ - which is a time dependent function - at a time `t`
+"""
+function z_square_analytic(t::Float64, cp::ControlParameter)
+    return √2 * exp(2im * phase_integral(t, cp)) * (2.0 / cp.NParticles * polynomial(t, cp)^2) / cp.ω0
+end
+
+"""
+second_deriv_analytic(t::Float64, cp::ControlParameter) return the analytical solution to the ⟨χ₂|∂²ₓ|χ₀⟩ integral - which is time dependent as well - at a time `t`
+"""
+function second_deriv_analytic(t::Float64, cp::ControlParameter)
+    return exp(2.0im * phase_integral(t, cp)) * (cp.ω0 - im * polynomial(t, cp) * polynomial_1d(t, cp))^2 / (2.0√2.0 * 2.0 / cp.NParticles * cp.ω0 * polynomial(t, cp)^2)
+end
+##}}}
