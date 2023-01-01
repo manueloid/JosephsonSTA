@@ -34,7 +34,7 @@ function Gn_bh(mth_bra::Int64, cp::ControlParameter)
     h = 2.0 / cp.NParticles
     return -2.0 * hcubature(
         x -> conj(create_wavefunction(x[1], x[2], mth_bra, cp)) *
-             bh(x[1], 0.0) *
+             bh(x[1], h) *
              ground_state(x[1] + h, x[2], cp),
         [-20.0, 0.0],
         [20.0, cp.final_time],

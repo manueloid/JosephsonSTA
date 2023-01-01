@@ -41,5 +41,3 @@ include("simulation.jl")
 ##}}}
 
 end
-
-

@@ -3,7 +3,7 @@
 phase_integral(t::Float64, cp::ControlParameter) return the integral that goes up in the phase part of the wavefunction at a time t return the integral that goes up in the phase part of the wavefunction at a time t.
 """
 function phase_integral(t::Float64, cp::ControlParameter)
-    return quadgk(τ -> cp.ω0 / polynomial(τ, cp)^2, 0.0, t, rtol=1e-3, atol=1e-3)[1]
+    return quadgk(τ -> cp.ω0 / polynomial(τ, cp)^2, 0.0, t, rtol=1e-3)[1]
 end
 
 """
