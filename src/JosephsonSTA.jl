@@ -10,8 +10,11 @@ using CSV
 
 ##{{{ Including the basic functionalities 
 export ControlParameter
+export ControlParameterFull
+export ControlParameterInt
 export offset
-export standard_cp
+export cp_time
+export cp_nparticles
 include("base.jl")
 ##}}}
 
@@ -41,3 +44,5 @@ include("simulation.jl")
 ##}}}
 
 end
+
+
