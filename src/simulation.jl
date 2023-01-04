@@ -33,7 +33,6 @@ fidelity_multiple(cp::ControlParameter, final_times::Vector{Float64}, nlambda::I
 function fidelity_multiple(cp::ControlParameter, final_times::Vector{Float64}, nlambda::Int64=5, maxbra::Int64=4)
     qt = constant_quantities(cp)
     fidelities = ones(length(final_times))
-    println("this is the revised version, with no collect")
     Threads.@threads for (index, tf) in enumerate(final_times) |> collect
         # for (index, tf) in enumerate(final_times)
         local cparam = cp_time(cp, tf)

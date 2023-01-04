@@ -113,8 +113,8 @@ function Gn_bh(mth_bra::Int64, cp::ControlParameterFull)
         x -> conj(create_wavefunction(x[1], x[2], mth_bra, cp)) *
              bh(x[1], h) *
              ground_state(x[1] + h, x[2], cp),
-        [-20.0, 0.0],
-        [20.0, cp.final_time],
+        [-1.0, 0.0],
+        [1.0, cp.final_time],
         rtol=1e-5,
     )[1]
 end
