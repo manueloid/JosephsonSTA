@@ -48,6 +48,7 @@ function fidelity_multiple(cp::ControlParameter, final_times::Vector{Float64}, n
     end
     return fidelities
 end
+precompile(fidelity_multiple, (ControlParameter, Vector{Float64}, Int64, Int64,))
 
 """
 fidelity_multiple(data::DataFrame) multiple dispatch of the fidelity_multiple function to act with DataFrame object in case the corrections are stored in some other file.
