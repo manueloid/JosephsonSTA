@@ -26,7 +26,7 @@ function Kns(cp::ControlParameter; nlambda::Int64=5)
 end
 
 Kns(ControlParameterFull(), nlambda=1);
-Kns(ControlParameterInt()), nlambda = 1;
+Kns(ControlParameterInt(), nlambda=1);
 
 ##}}}
 ##{{{ Common functions for both types of Hamiltonian
