@@ -8,6 +8,7 @@ function gradient_element(xs::Vector{Float64}, ys::Vector{Float64}, index::Int64
     ys[index] = 0.0
     return value
 end
+
 """
 gradient_λ(number_points::Int64, final_time::Float64, t::Float64) return the gradient with respect of lambda at time `t`
 """
@@ -23,6 +24,11 @@ This function returns the Kns given the fuction ⟨2|z²|0⟩:= z_square_int
 function Kns(cp::ControlParameter, nlambda::Int64=5)
     return 0.25 * quadgk(t -> gradient_λ(nlambda, cp.final_time, t) * z_square_analytic(t, cp), 0.0, cp.final_time)[1]
 end
+
+precompile(Kns, (ControlParameter, Int64,))
+Kns(ControlParameterFull(), 1);
+Kns(ControlParameterInt(), 1);
+
 ##}}}
 ##{{{ Common functions for both types of Hamiltonian
 bh(z::Float64, h::Float64) = abs(z) <= 1 ? √((1 + z + h) * (1 - z)) : 0 # One-line function that returns the piecewise function bₕ(z)
@@ -40,6 +46,8 @@ function Gn_analytic(cp::ControlParameter)
     )[1]
 end
 precompile(Gn_analytic, (ControlParameter,))
+Gn_analytic(ControlParameterFull())
+Gn_analytic(ControlParameterInt())
 ##}}}
 ##{{{Calculation of the Gns for the intermediate Hamiltonian
 
@@ -101,6 +109,7 @@ function Gn(m::Int64, cp::ControlParameterInt)
 end
 
 precompile(Gn, (Int64, ControlParameterInt))
+Gn(2, ControlParameterInt())
 # finally, as we can check from the notes, we are only interested in the K₂ term as the other ones are all 0. Let us focus only on m = 2 
 ##}}} ##src
 ##{{{Calculation of the Gns for the full Hamiltonian ##src
@@ -132,6 +141,7 @@ function Gn(m::Int64, cp::ControlParameterFull)
     end
 end
 precompile(Gn, (Int64, ControlParameter))
+Gn(0, ControlParameterFull())
 ##}}} ##src
 ##{{{Calculation of corrections for the original eSTA##src
 """
@@ -148,4 +158,6 @@ function corrections(cp::ControlParameter, nlambda::Int64=5, max_bra::Int64=4)
            ((real(conj(g2) * k2))' * (real(conj(g2) * k2)))
 end
 precompile(corrections, (ControlParameter, Int64, Int64,))
+corrections(ControlParameterFull(), 1, 2)
+corrections(ControlParameterInt(), 1, 2)
 ##}}} ##src
