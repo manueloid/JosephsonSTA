@@ -25,9 +25,8 @@ function Kns(cp::ControlParameter; nlambda::Int64=5)
     return 0.25 * quadgk(t -> gradient_λ(nlambda, cp.final_time, t) * z_square_analytic(t, cp), 0.0, cp.final_time)[1]
 end
 
-precompile(Kns, (ControlParameter, Int64,))
 Kns(ControlParameterFull(), nlambda=1);
-Kns(ControlParameterInt(), nlambda=1);
+Kns(ControlParameterInt()), nlambda = 1;
 
 ##}}}
 ##{{{ Common functions for both types of Hamiltonian
@@ -153,11 +152,11 @@ function corrections(cp::ControlParameter; nlambda::Int64=5, maxbra::Int64=4)
     for mbra = 4:2:maxbra
         gns += Gn(mbra, cp) |> abs2
     end
-    k2 = Kns(cp, nlambda)
+    k2 = Kns(cp, nlambda=nlambda)
     return (gns + abs2(g2)) * real(conj(g2) * k2) /
            ((real(conj(g2) * k2))' * (real(conj(g2) * k2)))
 end
-precompile(corrections, (ControlParameter, Int64, Int64,))
-corrections(ControlParameterFull(), nlambda=1, maxbra=2)
-corrections(ControlParameterInt(), nlambda=1, maxbra=2)
+
+corrections(ControlParameterFull(); nlambda=1, maxbra=2)
+corrections(ControlParameterInt(); nlambda=1, maxbra=2)
 ##}}} ##src
