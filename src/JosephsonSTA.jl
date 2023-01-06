@@ -4,8 +4,6 @@ using QuadGK
 using SpecialPolynomials
 using QuadGK
 using HCubature
-using DataFrames
-using CSV
 
 ##{{{ Including the basic functionalities 
 export ControlParameter
