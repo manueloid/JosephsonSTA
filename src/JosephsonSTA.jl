@@ -34,7 +34,7 @@ include("wavefunctions.jl")
 ##}}}
 
 export corrections
-include("corrections_full.jl")
+include("corrections.jl")
 
 end
 
