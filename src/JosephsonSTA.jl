@@ -4,7 +4,6 @@ using QuadGK
 using SpecialPolynomials
 using QuadGK
 using HCubature
-using QuantumOptics
 using DataFrames
 using CSV
 
@@ -36,12 +35,6 @@ include("wavefunctions.jl")
 
 export corrections
 include("corrections_full.jl")
-
-##{{{ Including utilities to calculate the fidelity of the protocol
-export fidelity_single
-export fidelity_multiple
-include("simulation.jl")
-##}}}
 
 end
 
