@@ -160,3 +160,20 @@ end
 corrections(ControlParameterFull(); nlambda=1, maxbra=2)
 corrections(ControlParameterInt(); nlambda=1, maxbra=2)
 ##}}} ##src
+##{{{Calculation of corrections for the original eSTA##src
+"""
+This function will evaluate the corrections given the maximum numbers of STA wavefunctions we want to use and the number of points we want to interpolate
+"""
+function corrections_hess(cp::ControlParameter; nlambda::Int64=5)
+    g2 = Gn(2, cp)
+    k2 = Kns(cp, nlambda=nlambda)
+    v = real(conj(g2) * k2)
+    hessian = k2 * k2' |> real
+    num = v * norm(v)^2
+    den = v' * hessian * v
+    return num/den
+end
+
+corrections(ControlParameterFull(); nlambda=1, maxbra=2)
+corrections(ControlParameterInt(); nlambda=1, maxbra=2)
+##}}} ##src

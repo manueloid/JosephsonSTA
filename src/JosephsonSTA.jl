@@ -2,7 +2,7 @@ module JosephsonSTA
 
 using QuadGK
 using SpecialPolynomials
-using QuadGK
+using LinearAlgebra
 using HCubature
 
 ##{{{ Including the basic functionalities 
@@ -32,6 +32,7 @@ include("wavefunctions.jl")
 ##}}}
 
 export corrections
+export corrections_hess
 include("corrections.jl")
 
 end
