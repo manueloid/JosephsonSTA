@@ -75,7 +75,7 @@ precompile(ground_state_2d, (Float64, Float64, ControlParameter,))
 z_square_analytic(t::Float64, cp::ControlParameter) return the integral ⟨χ₂|z²|χ₀⟩ - which is a time dependent function - at a time `t`
 """
 function z_square_analytic(t::Float64, cp::ControlParameter)
-    return √2 * exp(2im * phase_integral(t, cp)) * (2.0 / cp.NParticles * polynomial(t, cp)^2) / cp.ω0
+    return √2 * exp(2im * phase_integral(t, cp)) * (2.0 / cp.NParticles * polynomial(t, cp)) / cp.ω0
 end
 precompile(z_square_analytic, (Float64, ControlParameter,))
 
