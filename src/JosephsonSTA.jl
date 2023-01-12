@@ -12,6 +12,7 @@ export ControlParameterInt
 export offset
 export cp_time
 export cp_nparticles
+export rollout
 include("base.jl")
 ##}}}
 
@@ -32,7 +33,6 @@ include("wavefunctions.jl")
 ##}}}
 
 export corrections
-export corrections_hess
 include("corrections.jl")
 
 end

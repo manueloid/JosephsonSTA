@@ -22,12 +22,22 @@ end
 # One liners to create new ControlParameter variables from existing ones
 ControlParameterFull() = ControlParameterFull(2.0, 2.0√(1.0 + 50.0), 0.3, 50)
 ControlParameterInt() = ControlParameterInt(2.0, 2.0√(1.0 + 50.0), 0.3, 50)
-ControlParameterFull(tf::Float64, np::Int64) = ControlParameterFull(2.0, 2.0√(1.0 + 50.0),tf, np)
-ControlParameterInt(tf::Float64, np::Int64) = ControlParameterInt(2.0, 2.0√(1.0 + 50.0),tf, np)
-ControlParameterFull(np::Int64, tf::Float64) = ControlParameterFull(2.0, 2.0√(1.0 + 50.0),tf, np)
-ControlParameterInt(np::Int64, tf::Float64) = ControlParameterInt(2.0, 2.0√(1.0 + 50.0),tf, np)
+ControlParameterFull(tf::Float64, np::Int64) = ControlParameterFull(2.0, 2.0√(1.0 + 50.0), tf, np)
+ControlParameterInt(tf::Float64, np::Int64) = ControlParameterInt(2.0, 2.0√(1.0 + 50.0), tf, np)
+ControlParameterFull(np::Int64, tf::Float64) = ControlParameterFull(2.0, 2.0√(1.0 + 50.0), tf, np)
+ControlParameterInt(np::Int64, tf::Float64) = ControlParameterInt(2.0, 2.0√(1.0 + 50.0), tf, np)
 
 # Updating time and doing some offset
 cp_time(cp::ControlParameter, t::Float64) = typeof(cp)(cp.ω0, cp.ωf, t, cp.NParticles)
 cp_nparticles(cp::ControlParameter, np::Int64) = typeof(cp)(cp.ω0, cp.ωf, cp.final_time, np)
 offset(cp::ControlParameter, offset::Float64) = typeof(cp)(cp.ω0 + offset, cp.ωf + offset, cp.final_time, cp.NParticles)
+
+# Function to return all the values of a specific ControlParameter concrete type
+function rollout(cp::ControlParameter; h::Bool=true)
+    values = [getfield(cp, field) for field in fieldnames(typeof(cp))]
+    if h
+        values[end] = 2.0 / values[end]
+    end
+    return values
+end
+
