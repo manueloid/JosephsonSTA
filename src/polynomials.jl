@@ -14,54 +14,39 @@ function piecewise(t::Float64, cp::ControlParameter, f::Function)
     end
 end
 """
-polynomial_in(t::Float64, cp::ControlParameter) return the value of the control polynomial at the time `t` given some parameters in the interval [0, cp.final_time]
-"""
-function polynomial_in(t::Float64, cp::ControlParameter)
-    γ = √(cp.ω0 / cp.ωf)
-    return 6(γ - 1) * (t / cp.final_time)^5 -
-           15(γ - 1) * (t / cp.final_time)^4 +
-           10(γ - 1) * (t / cp.final_time)^3 +
-           1
-end
-"""
 polynomial(t::Float64, cp::ControlParameter) return the value of the control polynomial at the time `t` given some parameters as a piecewise function in the whole real line.
 """
 function polynomial(t::Float64, cp::ControlParameter)
-    return piecewise(t, cp, t -> polynomial_in(t, cp))
+    γ = √(cp.ω0 / cp.ωf)
+	f(t) = 6(γ - 1) * (t / cp.final_time)^5 -
+           15(γ - 1) * (t / cp.final_time)^4 +
+           10(γ - 1) * (t / cp.final_time)^3 +
+           1
+	return piecewise(t, cp, t -> f(t))
 end
 """
-polynomial_1din(t::Float64, cp::ControlParameter) return the value of the second derivative of the polynomial at the time `t` for a given ControlParameter in the interval [0, cp.final_time].
+polynomial_1d(t::Float64, cp::ControlParameter) return the value of the first derivative of the polynomial at the time `t` for a given ControlParameter as a piecewise function on the whole line.
 """
-function polynomial_1din(t::Float64, cp::ControlParameter)
+function polynomial_1d(t::Float64, cp::ControlParameter)
     γ = √(cp.ω0 / cp.ωf)
-    return 1 / cp.final_time * (
+	f(t)= 1 / cp.final_time * (
         30(γ - 1) * (t / cp.final_time)^4 -
         60(γ - 1) * (t / cp.final_time)^3 +
         30(γ - 1) * (t / cp.final_time)^2
     )
+	return piecewise(t, cp, t -> f(t))
 end
 """
-polynomial_1d(t::Float64, cp::ControlParameter) return the value of the second derivative of the polynomial at the time `t` for a given ControlParameter as a piecewise function on the whole line.
+polynomial_2d(t::Float64, cp::ControlParameter) return the value of the second derivative of the polynomial at the time `t` for a given ControlParameter on the whole line
 """
-function polynomial_1d(t::Float64, cp::ControlParameter)
-    return piecewise(t, cp, t -> polynomial_1din(t, cp))
-end
-"""
-polynomial_2din(t::Float64, cp::ControlParameter) return the value of the second derivative of the polynomial at the time `t` for a given ControlParameter in the interval [0, cp.final_time].
-"""
-function polynomial_2din(t::Float64, cp::ControlParameter)
+function polynomial_2d(t::Float64, cp::ControlParameter)
     γ = √(cp.ω0 / cp.ωf)
-    return 1 / cp.final_time^2 * (
+	f(t)=1 / cp.final_time^2 * (
         120(γ - 1) * (t / cp.final_time)^3 -
         180(γ - 1) * (t / cp.final_time)^2 +
         60(γ - 1) * (t / cp.final_time)
     )
-end
-"""
-polynomial_2d(t::Float64, cp::ControlParameter) return the value of the second derivative of the polynomial at the time `t` for a given ControlParameter as a piecewise function on the whole line.
-"""
-function polynomial_2d(t::Float64, cp::ControlParameter)
-    return piecewise(t, cp, t -> polynomial_2din(t, cp))
+	return piecewise(t, cp, t -> f(t))
 end
 """
 control_ω(t::Float64, cp::ControlParameter) return the control `ω` given the control polynomial 
@@ -83,3 +68,11 @@ correction_poly(cp::ControlParameter, correction_vector::Array{Float64,1}) takes
 The function is defined on the whole real line.
 """
 correction_poly(t::Float64, cp::ControlParameter, correction_vector::Array{Float64,1}) = piecewise(t, cp, t -> correction_polyin(t, cp, correction_vector))
+"""
+control_ad(t::Float64, cp::ControlParameter) return the control `ω` for the adiabatic protocol for the given the control parameter. This is just a polynomial that interpolates the the initial and final value with the extra condition that the derivatives needs to be zero at initial and final time.
+"""
+function control_ad(t::Float64, cp::ControlParameter)
+	ω0, ωf, tf = cp.ω0, cp.ωf, cp.final_time
+	f(t) = ω0^2 - 3(ω0^2 - ωf^2) * (t / tf)^2 + 2(ω0^2 - ωf^2) * (t / tf)^3
+	return piecewise(t, cp, t -> f(t))
+end
